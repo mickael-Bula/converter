@@ -5,7 +5,7 @@ import win32com.client as win32
 
 class Rtf2docxConverter:
     def __init__(self):
-        # par défaut le répertoire source est le répertoire courant
+        # par défaut le répertoire courant est assigné comme répertoire source
         self.path = os.getcwd()
         self.target_dir = 'C:/Users/bulam/Documents/docxFiles'
 

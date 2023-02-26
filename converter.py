@@ -5,8 +5,8 @@ import win32com.client as win32
 
 class Rtf2docxConverter:
     def __init__(self):
-        # on définit un path source par défaut
-        self.path = 'C:/Users/bulam/Documents/modeles'
+        # par défaut le répertoire source est le répertoire courant
+        self.path = os.getcwd()
         self.target_dir = 'C:/Users/bulam/Documents/docxFiles'
 
     def set_path(self, path: str) -> None:
@@ -27,8 +27,8 @@ class Rtf2docxConverter:
         doc = word.Documents.Open(file_path)
         # appel la méthode pour créer le chemin de destination à partir du nom du fichier
         target_dir = self.get_target_path(file_path)
-        # ...puis sauvegarde dans le répertoire cible au format .docx
-        doc.SaveAs(target_dir, FileFormat=wdFormatDocumentDefault)
+        # ...puis sauvegarde dans le répertoire cible au format .docx (format=16)
+        doc.SaveAs(target_dir, FileFormat=16)
         doc.Close()
 
     def convert_all(self, path=None) -> None:
@@ -37,8 +37,6 @@ class Rtf2docxConverter:
             self.set_path(path)
         # ouverture et configuration d'une instance Word unique pour convertir le fichier rtf en docx
         word = win32.Dispatch('Word.Application')
-        wdFormatDocumentDefault = 16
-        wdHeaderFooterPrimary = 1
         # utilisation d'une 'Generator Expression' pour itérer sur la liste des fichiers à convertir
         for filename in (file for file in os.listdir(self.path)):
             # appel de la méthode de conversion avec en argument le chemin vers le fichier et l'instance word
@@ -47,7 +45,10 @@ class Rtf2docxConverter:
         word.quit()
 
 
-converter = Rtf2docxConverter()
-converter.convert_all('C:/Users/bulam/Documents/modeles')
+if __name__ == '__main__':
+    converter = Rtf2docxConverter()
+    # le path (optionnel) en argument de la méthode de conversion représente le répertoire source des fichiers rtf
+    converter.convert_all('C:/Users/bulam/Documents/modeles')
+
 
 

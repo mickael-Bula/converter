@@ -1,5 +1,4 @@
 import os
-from typing import Type
 import win32com.client as win32
 
 
@@ -7,7 +6,7 @@ class Rtf2docxConverter:
     def __init__(self):
         # par défaut le répertoire courant est assigné comme répertoire source
         self.path = os.getcwd()
-        self.target_dir = 'C:/Users/bulam/Documents/docxFiles'
+        self.target_dir = 'C:/Users/bulam/doc-docx'
 
     def set_path(self, path: str) -> None:
         self.path = path
@@ -18,7 +17,7 @@ class Rtf2docxConverter:
         filename = os.path.basename(file_path).replace('.rtf', '.docx')
         return f"{self.target_dir}/{filename}"
 
-    def convert_rtf_to_docx(self, file_path, word: Type[win32]) -> None:
+    def convert_rtf_to_docx(self, file_path, word) -> None:
         """
         Utilise l'instance Word fournie en paramètre pour ouvrir un fichier au format rtf depuis le chemin fourni,
         puis le sauvegarde dans un répertoire cible au format docx
@@ -29,7 +28,8 @@ class Rtf2docxConverter:
         target_dir = self.get_target_path(file_path)
         # ...puis sauvegarde dans le répertoire cible au format .docx (format=16)
         doc.SaveAs(target_dir, FileFormat=16)
-        doc.Close()
+        # on ferme le document rtf sans l'enregistrer
+        doc.Close(False)
 
     def convert_all(self, path=None) -> None:
         """converti en docx tous les fichiers rtf contenus dans un répertoire fourni en paramètre"""
@@ -42,13 +42,13 @@ class Rtf2docxConverter:
             # appel de la méthode de conversion avec en argument le chemin vers le fichier et l'instance word
             self.convert_rtf_to_docx(f"{self.path}/{filename}", word)
         # une fois tous les fichiers convertis, on quitte l'instance word
-        word.quit()
+        word.Quit()
 
 
 if __name__ == '__main__':
     converter = Rtf2docxConverter()
     # le path (optionnel) en argument de la méthode de conversion représente le répertoire source des fichiers rtf
-    converter.convert_all('C:/Users/bulam/Documents/modeles')
+    converter.convert_all('C:/Users/bulam/doc-rtf')
 
 
 
